@@ -1,8 +1,79 @@
+@font-face {
+    font-family: "Roboto";
+    src: url("~/static/font/Roboto-Thin.ttf") format("truetype");
+    font-weight: 100;
+    font-style: normal;
+}
+@font-face {
+    font-family: "Roboto";
+    src: url("~/static/font/Roboto-ThinItalic.ttf") format("truetype");
+    font-weight: 100;
+    font-style: italic;
+}
+@font-face {
+    font-family: "Roboto";
+    src: url("~/static/font/Roboto-Light.ttf") format("truetype");
+    font-weight: 300;
+    font-style: normal;
+}
+@font-face {
+    font-family: "Roboto";
+    src: url("~/static/font/Roboto-LightItalic.ttf") format("truetype");
+    font-weight: 300;
+    font-style: italic;
+}
+@font-face {
+    font-family: "Roboto";
+    src: url("~/static/font/Roboto-Regular.ttf") format("truetype");
+    font-weight: 400;
+    font-style: normal;
+}
+@font-face {
+    font-family: "Roboto";
+    src: url("~/static/font/Roboto-Italic.ttf") format("truetype");
+    font-weight: 400;
+    font-style: italic;
+}
+@font-face {
+    font-family: "Roboto";
+    src: url("~/static/font/Roboto-Medium.ttf") format("truetype");
+    font-weight: 500;
+    font-style: normal;
+}
+@font-face {
+    font-family: "Roboto";
+    src: url("~/static/font/Roboto-MediumItalic.ttf") format("truetype");
+    font-weight: 500;
+    font-style: italic;
+}
+@font-face {
+    font-family: "Roboto";
+    src: url("~/static/font/Roboto-Bold.ttf") format("truetype");
+    font-weight: 700;
+    font-style: normal;
+}
+@font-face {
+    font-family: "Roboto";
+    src: url("~/static/font/Roboto-BoldItalic.ttf") format("truetype");
+    font-weight: 700;
+    font-style: italic;
+}
+@font-face {
+    font-family: "Roboto";
+    src: url("~/static/font/Roboto-Black.ttf") format("truetype");
+    font-weight: 900;
+    font-style: normal;
+}
+@font-face {
+    font-family: "Roboto";
+    src: url("~/static/font/Roboto-BlackItalic.ttf") format("truetype");
+    font-weight: 900;
+    font-style: italic;
+}
+
 body {
     font-family: Roboto;
     font-weight: 300;
     color: white;
     background-color: #3F4354;
 }
-
-

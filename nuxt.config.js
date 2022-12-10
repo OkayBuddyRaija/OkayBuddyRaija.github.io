@@ -4,7 +4,7 @@ export default {
 
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
-    title: 'okaybuddyraija.github.io',
+    title: 'Ratania BP Explorer',
     htmlAttrs: {
       lang: 'en'
     },
