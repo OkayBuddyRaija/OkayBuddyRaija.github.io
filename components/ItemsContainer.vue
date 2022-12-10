@@ -1,7 +1,9 @@
 <template>
   <div class="items-container">
     <input class="text-input" v-model="text" placeholder="Search" />
-    <ItemCard v-for="item in filteredItemData" :itemData="item"></ItemCard>
+    <ItemCard v-for="item in filteredItemData.slice(0, totalDisplay)" :itemData="item"></ItemCard>
+    <button class="end" v-if="filteredItemData.length > totalDisplay" @click="showMore()">Show more</button>
+    <p class="end" v-else>End of results.</p>
   </div>
 </template>
 
@@ -19,34 +21,49 @@ export default {
   },
   data() {
     return {
+      chunkSize: 5,
+      totalDisplay: 5,
       text: "",
       filteredItemData: this.itemData,
+      unPagedFilteredItemData: this.itemData,
     };
   },
   watch: {
     text: function (newText, oldText) {
-      var q = newText;
-      var outFilteredItemData =
-        q.length > 0
-          ? this.filteredItemData?.filter((x) => {
-              var tokens = Vue.prototype.$enTexts["item_text"][
-                (x).name - 1
-              ].text
-                .toLowerCase()
-                .split(" ");
-              for (var t of tokens) {
-                if (t.indexOf(q.toLowerCase()) === 0) {
-                  return true;
+      var q = newText.trim().split(" ");
+      this.filteredItemData =
+        newText.trim().length > 0
+          ? this.itemData?.filter((x) => {
+            var tokens = Vue.prototype.$enTexts["item_text"][
+              (x).name - 1
+            ].text
+              .toLowerCase()
+              .split(" ");
+            var koron = true;
+            var index = -1;
+            for (var qq of q) {
+              for (var [i, t] of tokens.slice(index > 0? index: 0 ,index > 0? index + 1 : tokens.length).entries()) {
+                if (t.indexOf(qq.toLowerCase()) === 0) {
+                  if(index === -1) index = i;
+                  index++;
+                  koron = true
+                  break;
+                } else {
+                  koron = false;
                 }
               }
-              return Vue.prototype.$jpTexts["item_text"][
-                (x).name - 1
-              ].text
-                .toLowerCase()
-                .includes(q.toLowerCase());
-            })
+              console.log(qq, koron)
+              if(!koron) break;
+            }
+            return (q.length === 1 ? Vue.prototype.$jpTexts["item_text"][x.name - 1].text.toLowerCase().includes(q[0].toLowerCase()) : false) || koron;
+          })
           : this.itemData;
-      this.filteredItemData = outFilteredItemData;
+      this.totalDisplay = this.chunkSize;
+    },
+  },
+  methods: {
+    showMore() {
+      this.totalDisplay += this.chunkSize;
     },
   },
 };
@@ -64,6 +81,7 @@ export default {
   padding: 1em;
   border-radius: 10px;
 }
+
 .text-input {
   border: 0;
   border-radius: 10px;
@@ -76,5 +94,21 @@ export default {
 .text-input:focus-visible {
   outline: none;
   background-color: #595e74;
+}
+
+.end {
+  text-align: center;
+  color: #ffffff;
+  padding: 1em;
+  border: 0;
+  border-radius: 10px;
+}
+button.end {
+  background-color: #3f4354;
+  transition: background-color 0.2s ease-in-out;
+}
+
+button.end:hover {
+  background-color: #434a66;
 }
 </style>

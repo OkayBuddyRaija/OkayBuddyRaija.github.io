@@ -33,7 +33,6 @@ export default {
       try {
         return require(`~/static/img/UI/Icon/Item/${pic}.png`);
       } catch (e) {
-        console.log(e);
         return require(`~/static/img/UI/UI_White.png`);
       }
     },
@@ -41,7 +40,6 @@ export default {
       try {
         return require(`~/static/img/UI/Icon/ItemL/${pic}.png`);
       } catch (e) {
-        console.log(e);
         return require(`~/static/img/UI/UI_White.png`);
       }
     },
