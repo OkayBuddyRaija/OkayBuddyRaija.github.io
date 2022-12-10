@@ -42,17 +42,17 @@ export default {
             var koron = true;
             var index = -1;
             for (var qq of q) {
-              for (var [i, t] of tokens.slice(index > 0? index: 0 ,index > 0? index + 1 : tokens.length).entries()) {
+              if(tokens.slice(index >= 0? index: 0 ,index >= 0? index + 1 : tokens.length).length === 0) koron = false;
+              for (var [i, t] of tokens.slice(index >= 0? index: 0 ,index >= 0? index + 1 : tokens.length).entries()) {
                 if (t.indexOf(qq.toLowerCase()) === 0) {
                   if(index === -1) index = i;
-                  index++;
+                  if(t.length === qq.length) index++;
                   koron = true
                   break;
                 } else {
                   koron = false;
                 }
               }
-              console.log(qq, koron)
               if(!koron) break;
             }
             return (q.length === 1 ? Vue.prototype.$jpTexts["item_text"][x.name - 1].text.toLowerCase().includes(q[0].toLowerCase()) : false) || koron;
@@ -99,10 +99,13 @@ export default {
 .end {
   text-align: center;
   color: #ffffff;
+  font-size: 1em;
+  margin: 0;
   padding: 1em;
   border: 0;
   border-radius: 10px;
 }
+
 button.end {
   background-color: #3f4354;
   transition: background-color 0.2s ease-in-out;
