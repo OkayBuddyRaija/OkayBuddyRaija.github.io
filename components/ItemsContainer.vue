@@ -1,7 +1,23 @@
 <template>
   <div class="items-container">
     <input class="text-input" v-model="text" placeholder="Search" />
-    <ItemCard v-for="item in filteredItemData.slice(0, totalDisplay)" :itemData="item"></ItemCard>
+    <div class="checkbox-pane">
+      <div class="checkbox-container">
+        <input type="checkbox" v-model="can_use" @change="updateFilter" />
+        <p>Consumable</p>
+      </div>
+      <div class="checkbox-container">
+        <input type="checkbox" v-model="dungeon_only" @change="updateFilter" />
+        <p>Dungeon Only</p>
+      </div>
+      <div class="checkbox-container">
+        <input type="checkbox" v-model="is_no_dissolution" @change="updateFilter" />
+        <p>Can't be dismantled</p>
+      </div>
+    </div>
+    <div class="card-container">
+      <ItemCard v-for="item in filteredItemData.slice(0, totalDisplay)" :itemData="item"></ItemCard>
+    </div>
     <button class="end" v-if="filteredItemData.length > totalDisplay" @click="showMore()">Show more</button>
     <p class="end" v-else>End of results.</p>
   </div>
@@ -21,17 +37,17 @@ export default {
   },
   data() {
     return {
-      chunkSize: 5,
-      totalDisplay: 5,
+      chunkSize: 12,
+      totalDisplay: 12,
       text: "",
+      queryItemData: this.itemData,
       filteredItemData: this.itemData,
-      unPagedFilteredItemData: this.itemData,
     };
   },
   watch: {
     text: function (newText, oldText) {
       var q = newText.trim().split(" ");
-      this.filteredItemData =
+      this.queryItemData =
         newText.trim().length > 0
           ? this.itemData?.filter((x) => {
             var tokens = Vue.prototype.$enTexts["item_text"][
@@ -42,28 +58,41 @@ export default {
             var koron = true;
             var index = -1;
             for (var qq of q) {
-              if(tokens.slice(index >= 0? index: 0 ,index >= 0? index + 1 : tokens.length).length === 0) koron = false;
-              for (var [i, t] of tokens.slice(index >= 0? index: 0 ,index >= 0? index + 1 : tokens.length).entries()) {
+              if (tokens.slice(index >= 0 ? index : 0, index >= 0 ? index + 1 : tokens.length).length === 0) koron = false;
+              for (var [i, t] of tokens.slice(index >= 0 ? index : 0, index >= 0 ? index + 1 : tokens.length).entries()) {
                 if (t.indexOf(qq.toLowerCase()) === 0) {
-                  if(index === -1) index = i;
-                  if(t.length === qq.length) index++;
+                  if (index === -1) index = i;
+                  if (t.length === qq.length) index++;
                   koron = true
                   break;
                 } else {
                   koron = false;
                 }
               }
-              if(!koron) break;
+              if (!koron) break;
             }
-            return (q.length === 1 ? Vue.prototype.$jpTexts["item_text"][x.name - 1].text.toLowerCase().includes(q[0].toLowerCase()) : false) || koron;
+            var jp_search = q.length === 1 ? Vue.prototype.$jpTexts["item_text"][x.name - 1].text.toLowerCase().includes(q[0].toLowerCase()) : false
+            var id_search = q.length === 1 ? x.id.toString().indexOf(q[0]) === 0 : false
+            return jp_search || id_search || koron;
           })
           : this.itemData;
+      this.updateFilter();
       this.totalDisplay = this.chunkSize;
     },
   },
   methods: {
     showMore() {
       this.totalDisplay += this.chunkSize;
+    },
+    updateFilter() {
+      this.filteredItemData = this.queryItemData?.filter((x) => {
+        return (
+          (!this.can_use || x.can_use) &&
+          (!this.dungeon_only || x.dungeon_only) &&
+          (!this.is_no_dissolution || x.is_no_dissolution)
+        );
+      });
+      this.totalDisplay = this.chunkSize;
     },
   },
 };
@@ -73,7 +102,6 @@ export default {
 .items-container {
   background-color: #2e313d;
   display: flex;
-  flex-wrap: wrap;
   flex-direction: column;
   justify-content: center;
   gap: 1em;
@@ -113,5 +141,32 @@ button.end {
 
 button.end:hover {
   background-color: #434a66;
+}
+
+.checkbox-pane {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 1em;
+  border-radius: 10px;
+}
+
+.checkbox-container {
+  display: flex;
+  flex-direction: row;
+  gap: 0.25em;
+}
+
+.checkbox-container input {
+  background-color: #2e313d;
+}
+.card-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-gap: 10px;
+}
+
+.card-container > .card-container {
+  height: 450px;
 }
 </style>
